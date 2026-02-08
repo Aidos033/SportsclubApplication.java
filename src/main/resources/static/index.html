@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sports Club</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 6px;
+            width: 250px;
+        }
+        .athlete {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Athletes</h1>
+
+<div id="athletes"></div>
+
+<h2>Add new athlete</h2>
+
+<input id="fullName" placeholder="Full name">
+<input id="gender" placeholder="Gender">
+<input id="age" type="number" placeholder="Age">
+<input id="height" type="number" placeholder="Height">
+<input id="weight" type="number" placeholder="Weight">
+<input id="experience" type="number" placeholder="Experience years">
+
+<br>
+<button onclick="addAthlete()">Add athlete</button>
+
+<script>
+    function deleteAthlete(id) {
+        fetch(`${API_URL}/${id}`, {
+            method: "DELETE"
+        }).then(() => loadAthletes());
+    }
+
+    const API_URL = "http://localhost:8080/athletes";
+
+    function loadAthletes() {
+        fetch(API_URL)
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById("athletes");
+                container.innerHTML = "";
+                data.forEach(a => {
+                    container.innerHTML += `
+                        <div class="athlete">
+                            <b>${a.fullName}</b><br>
+                            Age: ${a.age}<br>
+                            Gender: ${a.gender}<br>
+                            Experience: ${a.experienceYears}
+                        </div>
+                    `;
+                });
+            });
+    }
+
+    function addAthlete() {
+        const athlete = {
+            fullName: document.getElementById("fullName").value,
+            gender: document.getElementById("gender").value,
+            age: Number(document.getElementById("age").value),
+            height: Number(document.getElementById("height").value),
+            weight: Number(document.getElementById("weight").value),
+            experienceYears: Number(document.getElementById("experience").value)
+        };
+
+        fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(athlete)
+        }).then(() => loadAthletes());
+    }
+
+    data.forEach(a => {
+        container.innerHTML += `
+        <div class="athlete">
+            <b>${a.fullName}</b><br>
+            Age: ${a.age}<br>
+            Gender: ${a.gender}<br>
+            Experience: ${a.experienceYears}<br>
+            <button onclick="deleteAthlete(${a.id})">Delete</button>
+        </div>
+    `;
+    });
+
+</script>
+
+</body>
+</html>
